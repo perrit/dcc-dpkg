@@ -1,0 +1,14 @@
+#! /bin/sh -e
+
+case "$1" in
+    upgrade)
+        if test -f /etc/default/dcc-server; then
+            echo "Moving /etc/default/dcc-server -> /etc/default/dcc-common"
+            mv /etc/default/dcc-server /etc/default/dcc-common
+        fi
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

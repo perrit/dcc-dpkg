@@ -1,0 +1,108 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:        dcc-server
+# Required-Start:  $network $syslog
+# Required-Stop:   $network $syslog
+# Default-Start:   2 3 4 5
+# Default-Stop:    0 1 6
+# Short-Description: Distributed Checksum Clearinghouse server
+### END INIT INFO
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+. /lib/lsb/init-functions
+
+NAME=dcc-server
+DESC="Distributed Checksum Clearinghouse server"
+
+DCC_HOMEDIR=/var/lib/dcc
+DCC_LIBEXEC=/usr/lib/dcc
+DCC_RUNDIR=/var/run/dcc
+
+if [ -f /etc/default/dcc-common ]; then
+    . /etc/default/dcc-common
+else
+    echo "Missing file /etc/default/dcc-common"
+    exit 1
+fi
+
+if [ ! -d $DCC_RUNDIR ]; then
+    mkdir -p $DCC_RUNDIR
+    chown dcc:dcc $DCC_RUNDIR
+fi
+
+set -eu
+
+is_enabled() {
+    case "$1" in
+        [Oo][Ff][Ff]) false;;
+        [Oo][Nn])     true;;
+        *)
+            log_warning_msg "$2 is neither on nor off, hence assumed to be on"
+            true
+        ;;
+    esac
+}
+
+dcc_start () {
+    if is_enabled "$DCCD_ENABLE" 'DCCD_ENABLE'; then
+        log_daemon_msg "Starting $DESC" "dccd"
+        $DCC_LIBEXEC/start-dccd
+        log_end_msg $?
+    fi
+
+    if is_enabled "$GREY_ENABLE" 'GREY_ENABLE'; then
+        log_daemon_msg "Starting $DESC" "grey"
+        $DCC_LIBEXEC/start-grey
+        log_end_msg $?
+    fi
+
+    if is_enabled "$DCCIFD_ENABLE" 'DCCIFD_ENABLE'; then
+        log_daemon_msg "Starting $DESC" "dccifd"
+        $DCC_LIBEXEC/start-dccifd
+        log_end_msg $?
+    fi
+}
+
+dcc_stop () {
+    for pidfile in `ls $DCC_RUNDIR/dcc*.pid 2>/dev/null`; do
+        name=`basename $pidfile .pid`
+        if test "$name" != "dccm"; then
+            log_daemon_msg "Stopping $DESC" $name
+            kill -15 `cat $pidfile`
+            log_end_msg $?
+        fi
+    done
+
+    if is_enabled $DCCD_ENABLE 'DCCD_ENABLE'; then
+        log_daemon_msg "Stopping $DESC" dccd
+        $DCC_LIBEXEC/stop-dccd
+        $DCC_LIBEXEC/stop-dccd -G
+        log_end_msg $?
+    fi
+}
+
+case "$1" in
+    start)
+        dcc_start
+    ;;
+
+    stop)
+        dcc_stop
+    ;;
+
+    force-reload|restart)
+        dcc_stop
+        sleep 1
+        dcc_start
+    ;;
+
+    *)
+        N=/etc/init.d/$NAME
+        echo "Usage: $N {start|stop|force-reload|restart}" >&2
+        exit 1
+    ;;
+esac
+
+exit 0

@@ -1,0 +1,7 @@
+etc/dcc/ids		var/lib/dcc/ids
+etc/dcc/map.txt		var/lib/dcc/map.txt
+etc/dcc/whitecommon	var/lib/dcc/whitecommon
+etc/default/dcc-common  var/lib/dcc/dcc_conf
+etc/default/dcc-common	etc/dcc/dcc_conf
+
+var/log/dcc             var/lib/dcc/log

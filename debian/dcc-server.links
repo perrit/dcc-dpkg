@@ -1,0 +1,6 @@
+usr/sbin/dccifd         usr/lib/dcc/dccifd
+usr/sbin/dccd           usr/lib/dcc/dccd
+etc/dcc/whitelist	var/lib/dcc/whitelist
+etc/dcc/flod		var/lib/dcc/flod
+etc/dcc/grey_whitelist	var/lib/dcc/grey_whitelist
+etc/dcc/grey_flod	var/lib/dcc/grey_flod

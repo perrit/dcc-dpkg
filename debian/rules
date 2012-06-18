@@ -1,0 +1,43 @@
+#!/usr/bin/make -f
+# Copyright Dan Weber <dan@mirrorlynx.com> GPL 2004
+# modified by Martin Zobel-Helas <mhelas@helas.net> 2004
+
+include /usr/share/cdbs/1/rules/patchsys-quilt.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+
+clean::
+	$(RM) config.status config.log config.cache
+	find . -iname \*.in | sed -e "s/\.in$$//" | xargs rm -f
+
+DEB_INSTALL_CHANGELOGS_ALL := CHANGES
+
+DEB_CONFIGURE_NORMAL_ARGS :=  --libexecdir=/usr/lib/dcc
+
+DEB_CONFIGURE_EXTRA_FLAGS := --mandir=/usr/share/man \
+             --with-rundir=/var/run/dcc              \
+	     --libexecdir=/usr/lib/dcc               \
+             --homedir=/var/lib/dcc                  \
+	     --bindir=/usr/bin                       \
+             --with-uid=dcc                          \
+             --with-sendmail=/usr/lib/libmilter/libmilter.so
+
+DEB_MAKE_CLEAN_TARGET := clean
+
+DEB_MAKE_INSTALL_TARGET :=
+
+binary-post-install/dcc-server::
+	rm -rf debian/dcc-server/usr/share/doc/dcc-server/
+	dh_link -pdcc-server usr/share/doc/dcc-common usr/share/doc/dcc-server
+
+binary-post-install/dcc-milter::
+	rm -rf debian/dcc-milter/usr/share/doc/dcc-milter/
+	dh_link -pdcc-milter usr/share/doc/dcc-common usr/share/doc/dcc-milter
+
+binary-install/dcc-server::
+	cp misc/cron-dccd debian/dcc-server.cron.daily
+	dh_installcron -p$(cdbs_curpkg) $(DEB_DH_INSTALL_CRON_ARGS)
+
+binary-install/dcc-common::
+	chmod a+x debian/$(cdbs_curpkg)/usr/lib/dcc/start-*
+	chmod a+x debian/$(cdbs_curpkg)/usr/lib/dcc/stop-*

@@ -1,0 +1,8 @@
+dccd for Debian
+--------------
+
+dccd is located in /usr/sbin
+
+all admintools for dccd are located in /usr/lib/dcc
+
+ -- Martin Zobel-Helas, Thu, 15 Jul 2004 18:03:03 +0200

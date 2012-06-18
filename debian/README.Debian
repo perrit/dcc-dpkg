@@ -1,0 +1,40 @@
+dcc for Debian
+--------------
+
+To use DCC, you can either run it from procmail, from spamassassin or within
+sendmail by using the milterinterface. To use it with procmail, just put 
+
+    :0fw : /tmp/.lock.dcc.$LOGNAME
+    | /usr/bin/dccproc
+
+in your ~/.procmailrc, and extra headers will be added  in the mails 
+in your mailbox.
+
+If you want to use it with spamassassin, add 
+
+    use_dcc                 1
+
+to your ~/.spamassassin/user_prefs file. Spamassassin will now perform some
+extra online check using one of the public DCC servers.
+
+To use DCC within sendmail, you have to use dccm, which is supplied from the
+dcc-milter package. dcc-milter also includes some m4-file for
+sendmail-configuration.
+
+If you want to whitelist debian mailinglists, please run 
+/usr/share/doc/dcc-common/debian-whitelist.sh, copy resulting file
+whitelist.debian to /etc/dcc and modify /etc/dcc/whitelist to include
+whitelist.debian.
+
+DCC requires open firewall ports 6277 udp for incoming and outgoing. For
+further documentation about firewalling please also look at
+    http://www.dcc-servers.net/dcc/dcc-tree/FAQ.html#firewall-ports
+and 
+    http://www.rhyolite.com/anti-spam/dcc/firewall.html
+
+For further documentation, please read dcc (8) man page.
+
+
+Default map and id files are located in /usr/share/dcc.
+
+ -- Martin Zobel-Helas, Sun Nov 14 02:08:19 CET 2004 +0100

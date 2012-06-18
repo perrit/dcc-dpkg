@@ -1,0 +1,346 @@
+dcc (1.3.142-1~ppa1) squeeze; urgency=low
+
+  * New upstream release. (Closes: #464161)
+  * debian/patches:
+    + Removed 001_configure.patch
+    + Updated manpage_hyphens_fix.patch
+    + Removed dblist.8.patch
+  * Updated debian/rules to include --with-sendmail
+  * Replaced FAQ.txt with FAQ.html in debian/dcc-common.install
+  * Fixed paths in debian/*.manpages
+  * Updated debian/copyright to include the new license
+
+ -- Jeroen Koekkoek <j.koekkoek@perrit.nl>  Fri, 15 Jun 2012 12:14:29 +0200
+
+dcc (1.3.42-5) unstable; urgency=low
+
+  * QA upload.
+  * debian/control:
+    + Make Debian QA group the maintainer.
+    + Bump Standards version to 3.7.3.
+    + Depend on debhelper 5 and above.
+    + Add Homepage as a field.
+    + Change Source-Version to binary:Version in Depends.
+  * debian/patches:
+    + Add manpage_hyphens_fix.patch to escape hyphens in man pages.
+  * debian/rules:
+    + Remove config.sub, config.log and config.status on clean
+      to allow configure to run, and prevent FTBFS if built twice.
+
+ -- Kumar Appaiah <akumar@ee.iitm.ac.in>  Mon, 10 Dec 2007 13:34:32 +0530
+
+dcc (1.3.42-4) unstable; urgency=low
+
+  * Fix upgrading brown paper bag bugs.
+
+ -- Pierre Habouzit <madcoder@debian.org>  Tue, 26 Sep 2006 23:28:06 +0200
+
+dcc (1.3.42-3) unstable; urgency=low
+
+  * 1.3 series of dcc are non-free (Closes: 389525).
+
+ -- Pierre Habouzit <madcoder@debian.org>  Tue, 26 Sep 2006 22:52:21 +0200
+
+dcc (1.3.42-2) unstable; urgency=low
+
+  * Drop dcc-client, merge it into dcc-server (see NEWS.Debian).
+
+  * debian/dcc-common.preinst:
+    + remove legacy upgrades (from woody ?).
+    + rename /etc/default/dcc-server into /etc/default/dcc-common
+
+  * Simplify postinst scripts:
+    + avoid conditionnal chowns/chmods where we can force them.
+    + move /var/{run,log}/dcc existence into the package, just chown them.
+    + use a more robust way to generate random strings, involving /dev/urandom
+      rather than ps.
+
+  * Update /etc/default/dcc-commmon from upstream one.
+
+  * Update debian example whitelist.
+
+  * Simplify update-dccmaps.
+
+  * Remove DH_VERBOSE set to 1, renders the output unreadable, for few
+    important information anyway.
+
+  * fix dblist.8 man page (add the missing 8 section in .Dt)
+
+  * Init scripts:
+    + install upstream start-* and stop-dccd into /usr/lib/dcc.
+    + completely rework init scripts to use upstream ways to start daemons. It
+      does not ignore the configuration anymore.
+
+  * This upload fixes numerous packaging problems including:
+    + daemons are not enabled by default, one need to explicitely activate
+      them in /etc/dcc/dcc_conf (Closes: 320943).
+    + permissions were not always enforced on /var/lib/dcc/map in the postinst
+      (Closes: 365892).
+    + Using upstream scripts makes us read dcc_conf for dccifd as well
+      (Closes: 353446).
+
+ -- Pierre Habouzit <madcoder@debian.org>  Tue, 26 Sep 2006 18:14:20 +0200
+
+dcc (1.3.42-1) unstable; urgency=low
+
+  * Adopt the package (Closes: 380542).
+  * New upstream release.
+  * Now use quilt.
+
+  * Packaging:
+    + Use lsb functions in initscripts.
+    + Make package bin-NMUable.
+    + Update debian/copyright.
+
+ -- Pierre Habouzit <madcoder@debian.org>  Mon, 25 Sep 2006 21:08:31 +0200
+
+dcc (1.2.74-4) unstable; urgency=low
+
+  * QA upload.
+  * Make dcc-common recommend `dcc-client | dcc-server | dcc-milter'
+    rather than depend on them, to ensure the former is configured
+    before the latter.  Closes: #304237, #365893, #387198.
+    (`chown dcc.dcc' was quietly fixed in 1.2.74-3.)
+  * Fix typo in the description of dcc-common.  Closes: #363225.
+
+ -- Matej Vela <vela@debian.org>  Wed, 13 Sep 2006 06:29:44 +0200
+
+dcc (1.2.74-3) unstable; urgency=low
+
+  * QA upload.
+  * Fixed RC bug "dccifd does not work when IPv6 is not supported by the
+    kernel". Patch by dean gaudet <dean@arctic.org>. Closes: #376301.
+  * Fixed "errors in dccifd startup script". Patch by Rene Konasz
+    <oe4@gmx.at>. Closes: #304236.
+  * Fixed "Can't purge dcc-common if LDAP is used". Patch by MJ Ray
+    <mjr@dsl.pipex.com>. Closes: #307672.
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Wed, 06 Sep 2006 19:23:15 +1000
+
+dcc (1.2.74-2) unstable; urgency=high
+
+  * Renamed binary dccm to dcc-milter (Closes: #303323), thanks Frank for
+    reporting this one.
+  * removed DH_COMPAT from debian/rules to become lintian clean again
+  * urgency=high, as we fix an RC bug.
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Wed,  6 Apr 2005 18:04:09 +0200
+
+dcc (1.2.74-1) unstable; urgency=low
+
+  * The "Thanks to Marc 'HE' Brockschmidt" release
+  * New upstream release
+  * dcc-common depends now on dcc-clinet | dcc-server | dcc-milter
+  * changed the desicription to be a little bit more useful
+  * cleaned up debian/copyright and added missing stuff from upstream's
+    LICENSE
+  * all documentation is now in /usr/share/doc/dcc-common
+    other documenation directories now symlink to /usr/share/doc/dcc-common
+  * cleaned up debian/dcc-common.postrm
+  * examples are now installed via dh_installexamples
+  * start dccd with IPv6 per default
+  * gave a proper DESC in /etc/init.d/dcc-server
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Tue, 22 Mar 2005 15:41:15 +0100
+
+dcc (1.2.72-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Bug fix: "Segfaults on AMD64", thanks to Omniflux (Closes: #297955).
+    Fixed upstream in 1.2.67. (urgency=medium for that)
+  * Bug fix: "whitecommon can't be found", thanks to Wiesiek
+    (Closes: #297342).
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Thu,  3 Mar 2005 22:38:42 +0100
+
+dcc (1.2.66-1) unstable; urgency=low
+
+  * New upstream release
+    CHANGES from upstream:
+    + Possibly fix dccm crash
+    + Removed redundant declarations of mapfile_nm and rl_anon as
+      suggested by Andreas Jochens. (closes: #285622)
+    + Correct ">XXXX clients" from `cdcc stats`
+    + Fix accounting of NOPs from blacklisted clients.
+    + Fix race that caused "??" server-IDs in X-DCC headers.
+    + Do not count requests from blacklisted clients against the rate
+      limits
+    + Overhaul dccd rate-limiting.  Instead of imposing a penalty time
+      on overactive clients, simply rate-limit them.
+    + Reduce limit on dccd error messages about clients from
+      2/second to 0.1/second.
+  * making /var/lib/dcc/map 0600 dcc.dcc (closes: #284038,#284108),
+    thanks to Vadim Kutsyy and Lucas Albers for reporting this one.
+    also testing for user:group of /var/lib/dcc/map in postinst and
+    adjusting it.
+  * fixing symlink (closes: #284362),
+    thanks to Sven Hartge for reporting this stupid mistake.
+  * According to Policy Section 2.5: Packages MUST NOT depend on
+    packages with lower priority values. So setting priority to extra.
+  * changed if-clause from -a to -e in update-dccmaps (closes: #288155)
+    thanks to Santiago Vila.
+  * changed rundir from /var/run to /var/run/dcc
+  * added DH_COMPAT=4
+  * moved dccifd from /usr/bin to /usr/sbin and run it as daemon
+    (closes: #285743) as suggested by Julian Gilbey
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Sun,  2 Jan 2005 05:50:30 +0100
+
+dcc (1.2.62-1) unstable; urgency=low
+
+  * New upstream release
+    Changes form Upstream regarding Linux:
+    + Fix file descriptor leak in getifaddrs() replacement.
+    + Extended format to allow authenticated clients to be delayed
+      as `dccd -U` delays anonymous clients in /var/lib/dcc/ids
+    + Possibility to limit the size of the database window.
+    + Fixed broken `dccd -G0`.
+    + Track changes in network interfaces on most modern flavors of UNIX.
+    + Fix two MIME decoding bugs.
+    + Treat '>' as a blank instead of punctuation for FUZ2 checksums.
+    + Don't re-use va_list in stdargs functions to work around a
+      characteristic of gcc for AMD 64 bit systems.  gcc 64-bit stdargs
+      reportedly passes va_list by reference instead of by value.
+  * Dan Weber is no longer maintainer.
+  * My own patches reside now in debian/patches rather than in diff.gz
+  * Added symlink from /etc/default/dcc-server to /var/lib/dcc/dcc_conf
+    (closes: #275554)
+  * Added missing dccifd
+    (closes: #277580)
+  * default map file and default id file reside now in /usr/share/dcc
+  * added update-maps which properly removes old map files and regenerates
+    them. (closes: #276259)
+  * Package should be in better state now. (closes:#278048)
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Sat, 20 Nov 2004 17:51:11 +0100
+
+dcc (1.2.54-2) unstable; urgency=medium
+
+  * by Martin Zobel-Helas
+    + fixed preinst-issue (closes: #274681)
+    + removed /etc/dcc/dcc_conf from dcc-common
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Mon,  4 Oct 2004 13:04:49 +0200
+
+dcc (1.2.54-1) unstable; urgency=low
+
+  * by Martin Zobel-Helas
+    + New upstream release
+      - major changes is greylisting protocol.
+      - newer clients will not work on older (< 1.2.51) greylisting servers,
+        so update your greylisting server first.
+    + added dcc-client.docs
+    + added all d.o-lists to a sample whitelist
+    + added script to download up2date debian mailing lists
+      based on Dans regex.
+    + added upstream CHANGES to /usr/share/doc/dcc-*
+    + changed Build-Depends: debhelper to newer version
+  * by Dan Weber
+    + added regex to get all lists from lists.d.o
+  * Close RFP and ITP bugs (closes: #164842, #199510)
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Sun, 19 Sep 2004 22:24:47 +0200
+
+dcc (1.2.50-2) experimental; urgency=low
+
+  * Dan Weber and Martin Zobel-Helas are now listed as Co-Maintainers
+  * Added dcc-server (lets pray this works well).
+  * dcc is now pkg-dcc on alioth. cvs repository on
+    cvs.alioth.debian.org:/cvsroot/pkg-dcc co dcc
+  * completly restructured debian/rules by using cdbs
+  * Removing Superflous blank line in debian/control
+    (Thanks to Joan Cirer for reporting that one)
+  * added debconf
+  * relocated some conffiles from /var/lib/dcc to
+    /etc/dcc, preinst will promt a warning for that.
+  * Maintainer set to the Mailing List
+
+ -- Dan Weber <dan@mirrorlynx.com>  Thu, 26 Aug 2004 18:56:15 -0400
+
+dcc (1.2.50-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Wed, 14 Jul 2004 17:42:45 +0200
+
+dcc (1.2.43-1) unstable; urgency=low
+
+  * The "Thanks to Jochen" Release
+  	- Closes: #164842, #199510
+    	  This will close the RFP/ITP Bugs in the BTS.
+  	- Standards-Version is now 3.6.1 instead of 3.5.10
+  	- the empty /var/run is now not included in dcc-client any more.
+  * New upstream release
+  	- upstream removed --home, --build and --prefix from configure
+  * Corrected soure code permissions, dcc builds now with pbuilder.
+  * orig-files are now called *.template, so linda doesn't complain any more.
+  * whitecommon is now included to dcc-common.
+  * did the version renumbering as Jochen said.
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Wed, 21 Apr 2004 02:37:24 +0200
+
+dcc (1.2.28+0.pre-6) unstable; urgency=low
+
+  * New upstream release
+  * Did some lintian clean up.
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Mon, 19 Jan 2004 01:19:51 +0100
+
+dcc (1.2.27+0.pre-5) unstable; urgency=medium
+
+  * The "Sendmail" Release
+    dccm, the Sendmail milter interface is now included in the package. As I
+    don't use sendmail for now, i will need some external help to check
+    everything is working proprely.
+  * m4 files are supplied within dcc-milter package's documenation
+  * Added some documentation to README.Debian about using DCC with sendmail.
+  * Fixed postinst-skript of dcc-common.
+    now uses /bin/sh instead of /bin/bash
+  * Everything is now build in binary-arch
+  * dcc-client and dcc-milter now depend one dcc-common supplied with the
+    source package
+  * dcc-milter conflicts on spamass-milter
+    For reason look at debian/control
+  * Added new system user dcc
+  * /var/lib/dcc/[map|ids] are now private
+  * All programs are now suid dcc
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Sat, 17 Jan 2004 21:44:12 +0100
+
+dcc (1.2.27+0.pre-4) unstable; urgency=low
+
+  * Added some documentation to README.Debian about
+    - using DCC with procmail
+    - using DCC with spamassassin
+    - firewall hints.
+  * fixed parsing of /var/lib/dcc/ids in installation process.
+  * /var/lib/dcc/map.txt /var/lib/dcc/map and /var/lib/dcc/ids are now
+    generated by postinst
+    This garanties that the passwords for local servers are now generated
+    different for each installation.
+  * Local passwords are now not overwritten by update process.
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Mon, 12 Jan 2004 17:34:25 +0100
+
+dcc (1.2.27+0.pre-3) unstable; urgency=low
+
+  * Fixed update-problem in dcc-common.postinst
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Sun, 11 Jan 2004 22:02:10 +0100
+
+dcc (1.2.27+0.pre-2) unstable; urgency=low
+
+  * The "I am so stupid" upload
+    Sourcecode should be now included in upload
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Sun, 11 Jan 2004 13:41:05 +0100
+
+dcc (1.2.27+0.pre-1) unstable; urgency=low
+
+  * Initial Prerelease version. The packages dcc-common and dcc-client should
+    work fine. Work for dcc-milter and dcc-server is in progress, so they will
+    be not published yet.
+  * USE AT YOUR OWN RISK!
+
+ -- Martin Zobel-Helas <mhelas@helas.net>  Fri,  9 Jan 2004 02:44:03 +0100
+

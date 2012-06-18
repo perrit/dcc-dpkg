@@ -1,0 +1,16 @@
+dcc (1.3.42-2) unstable; urgency=low
+
+  * dcc-client is gone, and merged into dcc-server. The space gained by the
+    split was very small, and resulted in an overcomplicated packaging.
+
+  * in that release, init scripts have been reworked a *lot* and now use
+    upstreams scripts correctly. You may have needed to handcraft it
+    previously, it's no more needed.
+
+  * /etc/default/dcc-server has been renamed into /etc/default/dcc-common. An
+    attempt to move that file if it exists is done.
+
+    Also note that OPTIONS in /etc/default/dcc-common is obsolete and not used
+    anymore. use the appropriates DCC*_ARGS instead.
+
+ -- Pierre Habouzit <madcoder@debian.org>  Tue, 26 Sep 2006 11:16:28 +0200

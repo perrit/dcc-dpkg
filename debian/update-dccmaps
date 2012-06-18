@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# (c) 2004 by Martin Zobel-Helas
+# this piece of code is published under the
+# GNU General Public License
+
+DCC_HOMEDIR=/var/lib/dcc
+
+echo -n "Updating DCC map"
+if test -e /etc/dcc/map.txt; then
+    rm -f $DCC_HOMEDIR/map
+    /usr/bin/cdcc -qh $DCC_HOMEDIR 'new map; load -; info' < /etc/dcc/map.txt > /dev/null
+    chown dcc:dcc $DCC_HOMEDIR/map
+    chmod 0600    $DCC_HOMEDIR/map
+else
+    echo ": /etc/dcc/map.txt is missing."
+    exit 1
+fi
+echo "."
+
+exit 0

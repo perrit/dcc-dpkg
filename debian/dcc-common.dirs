@@ -1,0 +1,2 @@
+var/log/dcc
+var/run/dcc

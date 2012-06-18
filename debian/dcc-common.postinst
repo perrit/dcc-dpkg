@@ -1,0 +1,69 @@
+#!/bin/sh
+# postinst script for dcc
+
+random_aux() {
+    RANDOMDEVICE=/dev/urandom
+    if ! read -n 0 < $RANDOMDEVICE ; then
+        echo 1>&2 "Warning, no random device found, password might be insecure"
+        ps aux
+    else
+        od -N 32 -t d $RANDOMDEVICE
+    fi
+}
+
+random() {
+    random_aux | cksum | tr ' \t' 'xy'
+}
+
+case "$1" in
+    configure)
+        # creating dcc group if he isn't already there
+        if ! getent group dcc >/dev/null; then
+            echo Adding system group: dcc.
+            addgroup --system dcc
+        fi
+
+        # creating dcc user if he isn't already there
+        if ! getent passwd dcc >/dev/null; then
+            echo Adding system user: dcc.
+             adduser --system --ingroup dcc --no-create-home  \
+               --home /var/lib/dcc --shell /bin/false dcc
+             usermod -c "DCC System User"       dcc
+        fi
+
+        PASSWD1=`random`
+        PASSWD2=`random`
+
+        if [ ! -f /etc/dcc/ids ]; then
+            sed -e "s/secret1/$PASSWD1/" -e "s/secret2/$PASSWD2/" /usr/share/dcc/ids > /etc/dcc/ids
+            chmod 0600 /etc/dcc/ids
+            chown dcc:dcc /etc/dcc/ids
+        fi
+
+        if [ ! -f /etc/dcc/map.txt ]; then
+            sed -e "s/secret1/$PASSWD1/" /usr/share/dcc/map.txt > /etc/dcc/map.txt
+            /usr/sbin/update-dccmaps
+            chmod 0600    /etc/dcc/map.txt
+            chown dcc:dcc /etc/dcc/map.txt
+        fi
+
+        chown dcc:dcc /var/lib/dcc
+        chown dcc:dcc /var/run/dcc
+
+        chown dcc:dcc /usr/bin/cdcc /usr/bin/dccsight
+        chmod 06755   /usr/bin/cdcc /usr/bin/dccsight
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

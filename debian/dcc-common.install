@@ -1,0 +1,14 @@
+debian/update-dccmaps      usr/sbin
+dccsight/dccsight          usr/bin
+cdcc/cdcc                  usr/bin
+
+misc/start-dccd            usr/lib/dcc
+misc/stop-dccd             usr/lib/dcc
+misc/start-dccifd          usr/lib/dcc
+misc/start-dccm            usr/lib/dcc
+misc/start-grey            usr/lib/dcc
+
+homedir/ids                usr/share/dcc
+homedir/map.txt            usr/share/dcc
+homedir/whiteclnt          etc/dcc
+homedir/whitecommon        etc/dcc

@@ -1,0 +1,23 @@
+#! /bin/sh
+# postinst script for dcc
+
+set +e
+
+case "$1" in
+    configure)
+        chown dcc:dcc /usr/sbin/dccm
+        chmod 04755   /usr/sbin/dccm
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

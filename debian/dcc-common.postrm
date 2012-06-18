@@ -1,0 +1,33 @@
+#! /bin/sh
+# postrm script for dcc
+
+set -e
+
+
+case "$1" in
+    purge)
+
+        rm -rf /var/lib/dcc /etc/dcc /var/run/dcc
+
+        if getent passwd dcc >/dev/null; then
+            userdel dcc || echo "dcc: Could not remove dcc user" >&2
+        fi
+
+	
+        if getent group dcc >/dev/null; then
+            groupdel dcc || echo "dcc: Could not remove dcc group" >&2
+        fi
+    ;;
+
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    ;;
+
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0
